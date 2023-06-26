@@ -1,3 +1,4 @@
+# Almost everything is copied from https://github.com/aws-samples/aws-iot-core-lorawan.git
 #  Quickly get started with AWS IoT Core for LoRaWAN with sample solutions (binary decoding, device and gateway monitoring, downlink, dashboarding, provisioning automation)
 
 __New to AWS IoT Core for LoRaWAN? Consider step-by-step tutorial at [https://iotwireless.workshop.aws](https://iotwireless.workshop.aws)__
