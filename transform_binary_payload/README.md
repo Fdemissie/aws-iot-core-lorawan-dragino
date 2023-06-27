@@ -332,6 +332,7 @@ Please perform the following steps to deploy a sample application:
       | Dragino      | LSN50                             | dragino_lsn50      | x        |         |
       | Dragino      | LSN50v2                           | dragino_lsn50v2    | x        |         |
       | Dragino      | LSN50v2-D23                       | dragino_lsn50v2d23 |          | x       |
+      | Dragino      | LMDS200                       	 | dragino_lmds200    |          | x       |
       | Elsys        | all                               | elsys              | x        |         |
       | Globalsat    | LT-100                            | globalsat_lt100    | x        |         |
       | NAS          | Pulse Reader UM3080               | nas_um3080         | x        |         |
@@ -381,6 +382,7 @@ Please perform the following steps to deploy a sample application:
 	  | Dragino      | LSN50v2-D23                        | DO8BVQDqAf////8=                                                  |
 	  | Dragino      | LSN50v2-S31                        | DPcAAAEJAAEMAZc=                                                  |
 	  | Dragino      | LBT1                               | DxwAAAIDQUJCQ0NEREVFRkYwMjcxMjFGNkFDMy0wNTk=                      |
+          | Dragino	 | LMDS200			      | "DNkAAgByAA=="							  |
     | Browan       | Tabs Object Locator                | Ae48SPbhAgRupmA=                                                  |
     | Browan       | Tabs Temperature & Humidity Sensor | CAs1Mv////8=                                                      |
     | Elsys        | all                                | MDEwMEUyMDIyOTA0MDAyNzA1MDYwNjAzMDgwNzBENjIxOTAwRTIxOTAwQTM=      |
@@ -422,9 +424,9 @@ Please perform the following steps to deploy a sample application:
     }
     ```
 
-5. Please send the message you have defined in step 4. to the topic you have defined in step 3.
+6. Please send the message you have defined in step 4. to the topic you have defined in step 3.
   
-6. Please review the messages arriving on the topic `lorawantransformed`
+7. Please review the messages arriving on the topic `lorawantransformed`
   
     The expected output on the topic `lorawantransformed` should be:
 
