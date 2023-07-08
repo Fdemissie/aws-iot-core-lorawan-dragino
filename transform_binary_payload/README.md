@@ -70,6 +70,8 @@ Example binary decoders for the following devices are included in this sample:
 | Dragino      | LAQ4                              | dragino_laq4       | x        |         |
 | Dragino      | LLMS01                            | dragino_llms01     | x        |         |
 | Dragino      | LSPH01                            | dragino_lsph01     |          | x       |
+| Dragino      | LMDS200                           | dragino_lmds200    |          | x       |
+| Dragino      | WSC1L                             | dragino_wsc1l      |          | x       |
 | Dragino      | LDDS20                            | dragino_ldds20     |          | x       |
 | Dragino      | LWL02                             | dragino_lwl02      |          | x       |
 | Dragino      | LSN50                             | dragino_lsn50      | x        |         |
@@ -327,12 +329,13 @@ Please perform the following steps to deploy a sample application:
       | Dragino      | LAQ4                              | dragino_laq4       | x        |         |
       | Dragino      | LLMS01                            | dragino_llms01     | x        |         |
       | Dragino      | LSPH01                            | dragino_lsph01     |          | x       |
+      | Dragino      | LMDS200                           | dragino_lmds200    |          | x       |
+      | Dragino      | WSC1L                             | dragino_wsc1l      |          | x       |
       | Dragino      | LDDS20                            | dragino_ldds20     |          | x       |
       | Dragino      | LWL02                             | dragino_lwl02      |          | x       |
       | Dragino      | LSN50                             | dragino_lsn50      | x        |         |
       | Dragino      | LSN50v2                           | dragino_lsn50v2    | x        |         |
       | Dragino      | LSN50v2-D23                       | dragino_lsn50v2d23 |          | x       |
-      | Dragino      | LMDS200                       	 | dragino_lmds200    |          | x       |
       | Elsys        | all                               | elsys              | x        |         |
       | Globalsat    | LT-100                            | globalsat_lt100    | x        |         |
       | NAS          | Pulse Reader UM3080               | nas_um3080         | x        |         |
