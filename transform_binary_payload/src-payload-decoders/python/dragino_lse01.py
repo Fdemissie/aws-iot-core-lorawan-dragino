@@ -57,7 +57,7 @@ def dict_from_payload(base64_input: str, fport: int = None):
         temp_SOIL = ((value-0xFFFF)/100)
 
     value = decoded[8] << 8 | decoded[9]
-    conduct_SOIL = (value/100)  # /conduct_SOIL,conductivity,units:uS/cm
+    conduct_SOIL = (value)  # /conduct_SOIL,conductivity,units:uS/cm
 
     result = {
         "battery_value": battery_value,
