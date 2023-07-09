@@ -194,7 +194,7 @@ The detector model implements a user notification according to a following logic
 If the model changes to "Unknown" state after lack of ingestion for a predefined amount of time (currently 1 minute), following notification logic applies:
 
 |State t|State t+1|State t+2|Action|
-|-|-|-|-|-|
+|-|-|-|-|
 |Dry|Unknown|Dry|None|
 |Healthy|Unknown|Healthy|None|
 |Healthy|Unknown|Dry|Publish SNS message with alarm text|
