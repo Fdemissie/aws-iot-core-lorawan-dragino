@@ -101,7 +101,7 @@ Please perform the following steps to deploy a sample application:
 1. Clone this repository on your workstation
 
     ```shell
-    git clone https://github.com/aws-samples/aws-iot-core-lorawan 
+    git clone https://github.com/Fdemissie/aws-iot-core-lorawan-dragino.git 
     cd aws-iot-core-lorawan/transform_binary_payload
     ```
 
