@@ -181,27 +181,36 @@ Resources:
   TimestreamDatabase:
     Type: AWS::Timestream::Database
     Properties:
-      DatabaseName: !Sub ${AWS::StackName}LoRaWANDatabase
+      DatabaseName: !If
+        - DatabaseDoesNotExist
+        - "LoRaWANDatabase"
+        - !Ref TimestreamDatabase
+    DeletionPolicy: Retain
+
+  DatabaseDoesNotExist:
+    Type: AWS::Timestream::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}DatabaseDoesNotExist
+      DatabaseName: "LoRaWANDatabase"
 
   TimestreamTableTelemetry:
     Type: AWS::Timestream::Table
     Properties:
       TableName: !Sub ${AWS::StackName}LoRaWANTelemetryTable
-      DatabaseName:
-        Ref: TimestreamDatabase
+      DatabaseName: "LoRaWANDatabase"  # Updated DatabaseName
       RetentionProperties:
         MemoryStoreRetentionPeriodInHours: '24'
         MagneticStoreRetentionPeriodInDays: '5'
-  
+
   TimestreamTableMetadata:
-      Type: AWS::Timestream::Table
-      Properties:
-        TableName: !Sub ${AWS::StackName}LoRaWANMetadataTable
-        DatabaseName:
-          Ref: TimestreamDatabase
-        RetentionProperties:
-          MemoryStoreRetentionPeriodInHours: '24'
-          MagneticStoreRetentionPeriodInDays: '5'
+    Type: AWS::Timestream::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}LoRaWANMetadataTable
+      DatabaseName: "LoRaWANDatabase"  # Updated DatabaseName
+      RetentionProperties:
+        MemoryStoreRetentionPeriodInHours: '24'
+        MagneticStoreRetentionPeriodInDays: '5'
+
 
         
 Outputs:
