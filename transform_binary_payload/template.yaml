@@ -55,7 +55,7 @@ Resources:
     Properties:
       CodeUri: src-iotrule-transformation
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.9
       Layers:
         - Ref: LoRaWANPayloadDecoderLayer
       Environment:
@@ -91,8 +91,8 @@ Resources:
       Description: Payload decoders for LoRaWAN devices in Python and Node.JS
       ContentUri: src-payload-decoders
       CompatibleRuntimes:
-        - python3.8
-        - python3.7
+        - python3.9
+        - python3.9
         - python3.6
         - nodejs14.x
         - nodejs12.x
