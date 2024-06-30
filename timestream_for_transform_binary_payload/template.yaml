@@ -181,7 +181,7 @@ Resources:
   TimestreamDatabase:
     Type: AWS::Timestream::Database
     Properties:
-      DatabaseName: !Sub LoRaWANDatabase
+      DatabaseName: !Sub ${AWS::StackName}LoRaWANDatabase
 
   TimestreamTableTelemetry:
     Type: AWS::Timestream::Table

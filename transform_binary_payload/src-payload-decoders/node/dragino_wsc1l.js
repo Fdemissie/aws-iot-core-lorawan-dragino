@@ -1,4 +1,5 @@
 function decodeUplink(input) {
+	//console.log(input.bytes);
 	return { 
 		data: Decode(input.fPort, input.bytes, input.variables)
 	};   
@@ -9,6 +10,8 @@ if(parseInt(num) < 10)
 return num; 
 }
 function Decode(fPort, bytes, variables)  {
+console.log(bytes[0]);
+console.log(fPort);
 if(fPort == 2 && bytes[0]<0xE0)
 { var direction = {0:"N",1:"NNE",2:"NE",3:"ENE",4:"E",5:"ESE",6:"SE",7:"SSE",8:"S",9:"SSW",10:"SW",11:"WSW",12:"W",13:"WNW",14:"NW",15:"NNW"};
   var dic = {};
@@ -24,6 +27,7 @@ if(fPort == 2 && bytes[0]<0xE0)
   for(i=0;i<bytes.length;)
   {
 	  var len=bytes[i+1];
+	  //console.log(bytes)
 	  if(bytes[i]<0xA1)
 	  {
 		  var sensor_type= bytes[i];			
@@ -164,3 +168,7 @@ return info;
 }
 
 }
+
+module.exports = {
+    decodeUplink
+};
