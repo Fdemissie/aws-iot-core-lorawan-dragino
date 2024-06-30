@@ -58,7 +58,7 @@ Resources:
     Properties:
       CodeUri: src-iotrule-transformation
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Environment:
         Variables:
           PILOT_THINGS_SERVICE_API_KEY: !Ref ParamServiceApiKey
