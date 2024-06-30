@@ -238,7 +238,7 @@ Resources:
     Properties:
       CodeUri: src-mapthingname
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Timeout: 10
       Environment:
         Variables:
@@ -325,7 +325,7 @@ Resources:
     Properties:
       CodeUri: src-iotrule-transformation
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Layers:
         - Ref: LoRaWANPayloadDecoderLayer
       Environment:
