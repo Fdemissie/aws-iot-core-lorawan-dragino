@@ -308,8 +308,8 @@ function getData(hex) {
 // var datas = [2F, 01, 79, 51, 2B, 00, 77, 66, 51, 00, D9, 19, 4D, 75, 0B, 33, BF, 00, D0, 00, 6C, 03, A2,	00, 0E];
 
 //console.log(getData("2F0179512B0077665100D9194D750B33BF00D0006C03A2000E"));
-var input = {};
-input.fPort = 8;
-input.bytes = getData("64340800000000");
-console.log(input.bytes[6]);
-console.log(decodeUplink(input));
+// var input = {};
+// input.fPort = 1;
+// input.bytes = getData("5110669acfde03");
+// console.log(input.bytes[6]);
+// console.log(decodeUplink(input));
