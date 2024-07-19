@@ -54,13 +54,13 @@ function decodeUplink(input) {
 		return "v" + bytes[5] + "." + bytes[6]; // v3.0
 	}
 	function decode_lon(bytes) {
-		var lon = BytestoInt(bytes, 3) / 1000000;
+		var lon = BytestoInt(bytes, 3);
 		if (lon > 0x80000000)
 			lon = lon - 0x100000000;
 		return lon / 10000000;
 	}
 	function decode_lat(bytes) {
-		var lat = BytestoInt(bytes, 7) / 1000000;
+		var lat = BytestoInt(bytes, 7);
 		if (lat > 0x80000000)
 			lat = lat - 0x100000000;
 		return lat / 10000000;
@@ -299,7 +299,7 @@ function getData(hex) {
 
 //console.log(getData("2F0179512B0077665100D9194D750B33BF00D0006C03A2000E"));
 // var input = {};
-// input.fPort = 11;
-// input.bytes = getData("50340800000000");
+// input.fPort = 10;
+// input.bytes = getData("4f700cd2e2ddae1b12206f");
 // console.log(input.bytes[6]);
 // console.log(decodeUplink(input));
