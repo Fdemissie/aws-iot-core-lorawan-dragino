@@ -1,6 +1,6 @@
 // LW004-PB_V3 Payload Decoder rule
-// Creation time: 2023-07-12
-// Creator: Valentin Kim, based on V3 ChirpStack decoder code
+// Creation time: 2024-07-19
+// Creator: Fisseha D, based on V3 ChirpStack decoder code
 // Suitable firmware versions: LW004-PB V3.x.x
 // Programming languages: Javascript
 // Suitable platforms: Chirpstack v4.x
@@ -28,7 +28,7 @@ function decodeUplink(input) {
 	*/
 	var bytes = input.bytes;
 	var fPort = input.fPort;
-	var variables = input.variables;
+	var dev_info = {};
 	var data = {};
 	data.port = fPort;
 	data.hex_format_payload = bytesToHexString(bytes, 0, bytes.length);
@@ -37,9 +37,6 @@ function decodeUplink(input) {
 		data.charging_status = bytes[0] & 0x80 ? "charging" : "no charging";
 		data.batt_level = (bytes[0] & 0x7F) + "%";
 	}
-
-	var dev_info = {};
-	dev_info.pack_type = packet_type[fPort - 1];
 
 	function parse_battery_charging_state(bytes) {
 		return ((bytes[0] >> 7) & 0x01);
@@ -93,84 +90,77 @@ function decodeUplink(input) {
 		return signal;
 	}
 
-	switch (fPort) {
-		case (1):
-			data.payload_type = 'Event message';
-			data.time = parse_time(bytesToInt(bytes, 2, 4), bytes[1] * 0.5);
-			data.event_type = event_type[bytes[6]];
-			return data;
-		case (2):
-			data.payload_type = 'Device information';
-			data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-			data.dev_status = dev_status[bytes[1] & 0x0F];
-			data.parse_firmware = parse_firmware[bytes];
-			data.parse_timezone = parse_timezone(bytes, 7);
-			data.alarm = bytes[8];
-			return data;
-		case (3):
-			data.payload_type = 'Shut Down';
-			data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-			data.dev_status = dev_status[bytes[1] & 0x0F];
-			data.parse_timezone = parse_timezone(bytes, 7);
-			data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
-			data.restart_reason = restart_reason[bytes[7]];
-			return data;
-		case (4):
-			data.payload_type = 'Heartbeat';
-			data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-			data.dev_status = dev_status[bytes[1] & 0x0F];
-			data.parse_timezone = parse_timezone(bytes, 2);
-			data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
-			data.restart_reason = restart_reason[bytes[7]];
-			return data;
-		case (5):
-			data.payload_type = 'Low power';
-			data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-			data.dev_status = dev_status[bytes[1] & 0x0F];
-			data.parse_timezone = parse_timezone(bytes, 2);
-			data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
-			data.low_power_level = bytes[7];
-			return data;
-		case (6):
-		case (10):
-			data.payload_type = 'Location';
-			data.dev_mode = dev_mode[(bytes[1] >> 5) & 0x07];
-			data.dev_status = dev_status[(bytes[1] >> 2) & 0x07];
-			data.age = (bytes[1] & 0x03) << 8 | bytes[2]
-			data.longitude = decode_lon(bytes);
-			data.latitude = decode_lat(bytes)
-			return data;
-		case (7):
-		case (11):
-			var gps_fix_false_reason = ["hardware_error", "down_request_fix_interrupt", "mandown_fix_interrupt", "alarm_fix_interrupt", "gps_fix_tech_timeout", "gps_fix_timeout", "alert_short_time", "sos_short_time", "pdop_limit", "motion_start_interrupt", "motion_stop_interrupt"];
-			data.payload_type = 'Location Failure';
-			data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-			data.dev_status = dev_status[bytes[1] & 0x0F];
-			data.failure = gps_fix_false_reason[bytes[2]];
-			data.fix_cn0 = bytes[3];
-			data.fix_cn1 = bytes[4];
-			data.fix_cn2 = bytes[5];
-			data.fix_cn3 = bytes[6];
-			return data;
-		case (8):
-		case (12):
-			data.payload_type = 'Bluetooth Location';
-			data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-			data.dev_status = dev_status[bytes[1] & 0x0F];
-			data.age = (bytes[2]) << 8 | bytes[3];
-			data.signal = decode_signal_gps(bytes);
-			return data;
-		case (9):
-		case (13):
-			var ble_fix_false_reason = ["none", "hardware_error", "down_request_fix_interrupt", "mandown_fix_interrupt", "alarm_fix_interrupt", "ble_fix_timeout", "ble_adv", "motion_start_interrupt", "motion_stop_interrupt"];
-			data.payload_type = 'Bluetooth Location';
-			data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-			data.dev_status = dev_status[bytes[1] & 0x0F];
-			data.age = (bytes[2]) << 8 | bytes[3];
-			data.failure = ble_fix_false_reason[bytes[2]];
-			data.signal = decode_signal_bluetooth(bytes);
-			return data;
+	if (fPort == 1) {
+		data.payload_type = 'Event message';
+		data.time = parse_time(bytesToInt(bytes, 2, 4), bytes[1] * 0.5);
+		data.event_type = event_type[bytes[6]];
+	} else if (fPort == 2) {
+		data.payload_type = 'Device information';
+		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
+		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.parse_firmware = parse_firmware[bytes];
+		data.parse_timezone = parse_timezone(bytes, 7);
+		data.alarm = bytes[8];
+	} else if (fPort == 3) {
+		data.payload_type = 'Shut Down';
+		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
+		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.parse_timezone = parse_timezone(bytes, 7);
+		data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
+		data.restart_reason = restart_reason[bytes[7]];
 	}
+	else if (fPort == 4) {
+		data.payload_type = 'Heartbeat';
+		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
+		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.parse_timezone = parse_timezone(bytes, 2);
+		data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
+		data.restart_reason = restart_reason[bytes[7]];
+	}
+	else if (fPort == 5) {
+		data.payload_type = 'Low power';
+		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
+		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.parse_timezone = parse_timezone(bytes, 2);
+		data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
+		data.low_power_level = bytes[7];
+	}
+	else if (fPort == 6 || fPort == 10) {
+		data.payload_type = 'Location';
+		data.dev_mode = dev_mode[(bytes[1] >> 5) & 0x07];
+		data.dev_status = dev_status[(bytes[1] >> 2) & 0x07];
+		data.age = (bytes[1] & 0x03) << 8 | bytes[2]
+		data.longitude = decode_lon(bytes);
+		data.latitude = decode_lat(bytes)
+	}
+	else if (fPort == 7 || fPort == 11) {
+		var gps_fix_false_reason = ["hardware_error", "down_request_fix_interrupt", "mandown_fix_interrupt", "alarm_fix_interrupt", "gps_fix_tech_timeout", "gps_fix_timeout", "alert_short_time", "sos_short_time", "pdop_limit", "motion_start_interrupt", "motion_stop_interrupt"];
+		data.payload_type = 'Location Failure';
+		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
+		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.failure = gps_fix_false_reason[bytes[2]];
+		data.fix_cn0 = bytes[3];
+		data.fix_cn1 = bytes[4];
+		data.fix_cn2 = bytes[5];
+		data.fix_cn3 = bytes[6];
+	}
+	else if (fPort == 8 || fPort == 12) {
+		data.payload_type = 'Bluetooth Location';
+		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
+		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.age = (bytes[2]) << 8 | bytes[3];
+		data.signal = decode_signal_gps(bytes);
+	} else if (fPort == 9 || fPort == 13) {
+		var ble_fix_false_reason = ["none", "hardware_error", "down_request_fix_interrupt", "mandown_fix_interrupt", "alarm_fix_interrupt", "ble_fix_timeout", "ble_adv", "motion_start_interrupt", "motion_stop_interrupt"];
+		data.payload_type = 'Bluetooth Location';
+		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
+		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.age = (bytes[2]) << 8 | bytes[3];
+		data.failure = ble_fix_false_reason[bytes[2]];
+		data.signal = decode_signal_bluetooth(bytes);
+	}
+	dev_info.data = data;
+	return dev_info;
 }
 
 
@@ -309,7 +299,7 @@ function getData(hex) {
 
 //console.log(getData("2F0179512B0077665100D9194D750B33BF00D0006C03A2000E"));
 // var input = {};
-// input.fPort = 1;
-// input.bytes = getData("5110669acfde03");
+// input.fPort = 11;
+// input.bytes = getData("50340800000000");
 // console.log(input.bytes[6]);
 // console.log(decodeUplink(input));
