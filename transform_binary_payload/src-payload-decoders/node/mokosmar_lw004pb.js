@@ -6,8 +6,8 @@
 // Suitable platforms: Chirpstack v4.x
 
 var packet_type = ["event", "sys_open", "sys_close", "heart", "low_battery", "work_gps_fix_success", "work_gps_fix_false", "work_ble_fix_success", "work_ble_fix_false", "helper_gps_fix_success", "helper_gps_fix_false", "helper_ble_fix_success", "helper_ble_fix_false"];
-var dev_mode = ["off", "Standby Mode", "Timing Mode", "Periodic Mode", "Motion Mode On Stationary", "Motion Mode On Start", "Motion Mode In Trip", "Motion Mode On End"];
-var dev_status = ["No", "Downlink", "Man Down", "Alert", "SOS"];
+var device_mode = ["off", "Standby Mode", "Timing Mode", "Periodic Mode", "Motion Mode On Stationary", "Motion Mode On Start", "Motion Mode In Trip", "Motion Mode On End"];
+var device_status = ["No", "Downlink", "Man Down", "Alert", "SOS"];
 var event_type = ["Motion On Start", "Motion In Trip", "Motion On End", "SOS Start", "SOS End", "Alert Start", "Alert End", "Man Down Start", "Man Down End", "Downlink Report"];
 var restart_reason = ["ble_cmd_restart", "lorawan_cmd_restart", "key_restart", "power_restart"];
 
@@ -96,39 +96,39 @@ function decodeUplink(input) {
 		data.event_type = event_type[bytes[6]];
 	} else if (fPort == 2) {
 		data.payload_type = 'Device information';
-		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.device_mode = device_mode[(bytes[1] >> 4) & 0x0F];
+		data.device_status = device_status[bytes[1] & 0x0F];
 		data.parse_firmware = parse_firmware[bytes];
 		data.parse_timezone = parse_timezone(bytes, 7);
 		data.alarm = bytes[8];
 	} else if (fPort == 3) {
 		data.payload_type = 'Shut Down';
-		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.device_mode = device_mode[(bytes[1] >> 4) & 0x0F];
+		data.device_status = device_status[bytes[1] & 0x0F];
 		data.parse_timezone = parse_timezone(bytes, 7);
 		data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
 		data.restart_reason = restart_reason[bytes[7]];
 	}
 	else if (fPort == 4) {
 		data.payload_type = 'Heartbeat';
-		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.device_mode = device_mode[(bytes[1] >> 4) & 0x0F];
+		data.device_status = device_status[bytes[1] & 0x0F];
 		data.parse_timezone = parse_timezone(bytes, 2);
 		data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
 		data.restart_reason = restart_reason[bytes[7]];
 	}
 	else if (fPort == 5) {
 		data.payload_type = 'Low power';
-		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.device_mode = device_mode[(bytes[1] >> 4) & 0x0F];
+		data.device_status = device_status[bytes[1] & 0x0F];
 		data.parse_timezone = parse_timezone(bytes, 2);
 		data.time = parse_time(bytesToInt(bytes, 3, 5), bytes[2] * 0.5);
 		data.low_power_level = bytes[7];
 	}
 	else if (fPort == 6 || fPort == 10) {
 		data.payload_type = 'Location';
-		data.dev_mode = dev_mode[(bytes[1] >> 5) & 0x07];
-		data.dev_status = dev_status[(bytes[1] >> 2) & 0x07];
+		data.device_mode = device_mode[(bytes[1] >> 5) & 0x07];
+		data.device_status = device_status[(bytes[1] >> 2) & 0x07];
 		data.age = (bytes[1] & 0x03) << 8 | bytes[2]
 		data.longitude = decode_lon(bytes);
 		data.latitude = decode_lat(bytes)
@@ -136,8 +136,8 @@ function decodeUplink(input) {
 	else if (fPort == 7 || fPort == 11) {
 		var gps_fix_false_reason = ["hardware_error", "down_request_fix_interrupt", "mandown_fix_interrupt", "alarm_fix_interrupt", "gps_fix_tech_timeout", "gps_fix_timeout", "alert_short_time", "sos_short_time", "pdop_limit", "motion_start_interrupt", "motion_stop_interrupt"];
 		data.payload_type = 'Location Failure';
-		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.device_mode = device_mode[(bytes[1] >> 4) & 0x0F];
+		data.device_status = device_status[bytes[1] & 0x0F];
 		data.failure = gps_fix_false_reason[bytes[2]];
 		data.fix_cn0 = bytes[3];
 		data.fix_cn1 = bytes[4];
@@ -146,15 +146,15 @@ function decodeUplink(input) {
 	}
 	else if (fPort == 8 || fPort == 12) {
 		data.payload_type = 'Bluetooth Location';
-		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.device_mode = device_mode[(bytes[1] >> 4) & 0x0F];
+		data.device_status = device_status[bytes[1] & 0x0F];
 		data.age = (bytes[2]) << 8 | bytes[3];
 		data.signal = decode_signal_gps(bytes);
 	} else if (fPort == 9 || fPort == 13) {
 		var ble_fix_false_reason = ["none", "hardware_error", "down_request_fix_interrupt", "mandown_fix_interrupt", "alarm_fix_interrupt", "ble_fix_timeout", "ble_adv", "motion_start_interrupt", "motion_stop_interrupt"];
 		data.payload_type = 'Bluetooth Location';
-		data.dev_mode = dev_mode[(bytes[1] >> 4) & 0x0F];
-		data.dev_status = dev_status[bytes[1] & 0x0F];
+		data.device_mode = device_mode[(bytes[1] >> 4) & 0x0F];
+		data.device_status = device_status[bytes[1] & 0x0F];
 		data.age = (bytes[2]) << 8 | bytes[3];
 		data.failure = ble_fix_false_reason[bytes[2]];
 		data.signal = decode_signal_bluetooth(bytes);
