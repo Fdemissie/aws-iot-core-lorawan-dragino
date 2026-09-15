@@ -232,7 +232,12 @@ function decodeUP(bytes) {
         if (typeof bytesData === "string") {
             return bytesData.toUpperCase();
         }
-        return bytesData.map(function (byte) {
+        // bytesData may be a Uint8Array (as passed by the AWS IoT rule
+        // transformation Lambda); Array.from() converts it to a plain
+        // Array first so the map() callback's hex-string results aren't
+        // coerced back into numbers (which would silently corrupt/drop
+        // any byte whose hex form contains a letter, e.g. "AC" -> NaN -> 0).
+        return Array.from(bytesData).map(function (byte) {
             return ("0" + (byte & 0xff).toString(16)).slice(-2);
         }).join("").toUpperCase();
     }
