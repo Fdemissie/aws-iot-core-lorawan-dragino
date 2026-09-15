@@ -12,9 +12,11 @@ function Decoder(bytes, port, uplink_info) {
 }
 
 function decodeUP(bytes) {
-   //var bytes = handlerHexToBytes("24168f2f97a51402a2050100000b2d0b00000b2d1a003b330000230119");
+    //var bytes = handlerHexToBytes(bytes);
     var caseStr, tempStr, funcEnumObj;
-    tempStr = handlerBytesToHex(bytes);
+    //tempStr = handlerBytesToHex(bytes);
+    tempStr = bytes;
+    console.log(bytes);
     var dataObj = {
         dateVersion: "20241230",
         payload: "",
@@ -518,3 +520,13 @@ function decodeUP(bytes) {
 
     
 }
+
+// 261b0041 - device type - water meter
+// 2612020B - mode - double hall
+var bytes = "26130098967f14020b00001B3759";
+  var input = {
+    "fPort": 2,
+    "bytes": bytes
+}
+  console.log(decodeUP(bytes));
+  console.log(JSON.stringify(decodeUplink(input)));

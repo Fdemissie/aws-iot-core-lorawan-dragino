@@ -74,7 +74,7 @@ Resources:
     Properties:
       CodeUri: src-iotrule-transformation-nodejs
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs24.x
       Layers:
         - Ref: LoRaWANPayloadDecoderLayer
       Environment:
@@ -96,7 +96,7 @@ Resources:
         - python3.6
         - nodejs14.x
         - nodejs12.x
-        - nodejs18.x
+        - nodejs24.x
       RetentionPolicy: Retain
 
   ############################################################################################
